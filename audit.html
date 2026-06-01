@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUDAI — Esecuzione Audit</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="logo.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <style>
+        body {
+            background-color: #030305;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(124, 92, 252, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.08), transparent 25%);
+        }
+        
+        .audit-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            font-size: 1.2rem;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .nav-logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+        }
+
+        .section-quiz {
+            width: 100%;
+            padding: 0 20px;
+            background: transparent;
+        }
+
+        .quiz-wrapper {
+            background: rgba(10, 10, 18, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            max-width: 700px;
+            margin: 80px auto 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="audit-header">
+        <a href="index.html" class="nav-logo">
+            <img src="logo.png" alt="AUDAI Logo">
+            <span>AUDAI</span>
+        </a>
+    </header>
+
+    <section class="section-quiz" id="quiz-container">
+        <div class="card quiz-wrapper">
+            <div class="quiz-progress">
+                <div class="quiz-progress-bar" id="quiz-progress-bar"></div>
+            </div>
+            <div class="quiz-progress-text" id="quiz-progress-text">Domanda 1 di 5</div>
+
+            <!-- Q1: Settore -->
+            <div class="quiz-step active" data-step="1">
+                <div class="quiz-step-tag">Step 1 di 5</div>
+                <h3 class="quiz-question">In quale settore opera la tua azienda?</h3>
+                <p class="quiz-hint">Ci serve per personalizzare le automazioni proposte.</p>
+                
+                <div class="quiz-options" data-name="sector">
+                    <button class="quiz-option" data-value="ecommerce">
+                        <span class="quiz-option-icon">🛒</span>
+                        <span class="quiz-option-text">E-commerce / Retail</span>
+                    </button>
+                    <button class="quiz-option" data-value="agency">
+                        <span class="quiz-option-icon">🎯</span>
+                        <span class="quiz-option-text">Agenzia (Marketing, Dev, Creativa)</span>
+                    </button>
+                    <button class="quiz-option" data-value="professional">
+                        <span class="quiz-option-icon">⚖️</span>
+                        <span class="quiz-option-text">Studio Professionale (Avvocati, Commercialisti)</span>
+                    </button>
+                    <button class="quiz-option" data-value="manufacturing">
+                        <span class="quiz-option-icon">🏭</span>
+                        <span class="quiz-option-text">Manifatturiero / Produzione</span>
+                    </button>
+                    <button class="quiz-option" data-value="services">
+                        <span class="quiz-option-icon">🤝</span>
+                        <span class="quiz-option-text">Azienda di Servizi B2B/B2C</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q2: Dipendenti -->
+            <div class="quiz-step" data-step="2">
+                <div class="quiz-step-tag">Step 2 di 5</div>
+                <h3 class="quiz-question">Dimensione del team?</h3>
+                <p class="quiz-hint">Più persone ci sono, più processi si possono automatizzare.</p>
+                
+                <div class="quiz-options" data-name="teamSize">
+                    <button class="quiz-option" data-value="micro">
+                        <span class="quiz-option-icon">👤</span>
+                        <span class="quiz-option-text">1-5 dipendenti</span>
+                    </button>
+                    <button class="quiz-option" data-value="small">
+                        <span class="quiz-option-icon">👥</span>
+                        <span class="quiz-option-text">6-20 dipendenti</span>
+                    </button>
+                    <button class="quiz-option" data-value="medium">
+                        <span class="quiz-option-icon">🏢</span>
+                        <span class="quiz-option-text">21-50 dipendenti</span>
+                    </button>
+                    <button class="quiz-option" data-value="large">
+                        <span class="quiz-option-icon">📈</span>
+                        <span class="quiz-option-text">50+ dipendenti</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q3: Pain Points (Multi-select) -->
+            <div class="quiz-step" data-step="3">
+                <div class="quiz-step-tag">Step 3 di 5</div>
+                <h3 class="quiz-question">Quali sono le attività che rubano più tempo oggi?</h3>
+                <p class="quiz-hint">Seleziona tutte quelle applicabili.</p>
+                
+                <div class="quiz-options multi" data-name="painPoints">
+                    <button class="quiz-option" data-value="customer_support">
+                        <span class="quiz-option-icon">💬</span>
+                        <span class="quiz-option-text">Rispondere alle stesse domande dei clienti</span>
+                    </button>
+                    <button class="quiz-option" data-value="data_entry">
+                        <span class="quiz-option-icon">📝</span>
+                        <span class="quiz-option-text">Copia-incolla di dati tra software diversi</span>
+                    </button>
+                    <button class="quiz-option" data-value="reporting">
+                        <span class="quiz-option-icon">📊</span>
+                        <span class="quiz-option-text">Creazione report e analisi dati Excel</span>
+                    </button>
+                    <button class="quiz-option" data-value="content">
+                        <span class="quiz-option-icon">✍️</span>
+                        <span class="quiz-option-text">Scrittura email, post social o descrizioni prodotti</span>
+                    </button>
+                    <button class="quiz-option" data-value="lead_management">
+                        <span class="quiz-option-icon">🎯</span>
+                        <span class="quiz-option-text">Qualificazione e follow-up dei nuovi contatti (Lead)</span>
+                    </button>
+                    <button class="quiz-option" data-value="invoicing">
+                        <span class="quiz-option-icon">🧾</span>
+                        <span class="quiz-option-text">Gestione fatture, solleciti e prima nota</span>
+                    </button>
+                </div>
+                <button class="btn btn-primary quiz-next-btn" id="quiz-next-3" disabled>Continua →</button>
+            </div>
+
+            <!-- Q4: Ore perse -->
+            <div class="quiz-step" data-step="4">
+                <div class="quiz-step-tag">Step 4 di 5</div>
+                <h3 class="quiz-question">Quante ore a settimana stimi vengano sprecate in queste attività?</h3>
+                
+                <div class="quiz-options" data-name="hoursWasted">
+                    <button class="quiz-option" data-value="5">
+                        <span class="quiz-option-icon">🤏</span>
+                        <span class="quiz-option-text">Meno di 5 ore/settimana</span>
+                    </button>
+                    <button class="quiz-option" data-value="10">
+                        <span class="quiz-option-icon">⏱️</span>
+                        <span class="quiz-option-text">Circa 10 ore/settimana</span>
+                    </button>
+                    <button class="quiz-option" data-value="20">
+                        <span class="quiz-option-icon">⏳</span>
+                        <span class="quiz-option-text">Sulle 20 ore/settimana (Metà di uno stipendio)</span>
+                    </button>
+                    <button class="quiz-option" data-value="40">
+                        <span class="quiz-option-icon">🚨</span>
+                        <span class="quiz-option-text">Oltre 40 ore/settimana (Un dipendente intero)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q5: AI Attuale -->
+            <div class="quiz-step" data-step="5">
+                <div class="quiz-step-tag">Step Finale</div>
+                <h3 class="quiz-question">Utilizzate già l'Intelligenza Artificiale in azienda?</h3>
+                
+                <div class="quiz-options" data-name="aiExperience">
+                    <button class="quiz-option" data-value="none">
+                        <span class="quiz-option-icon">🌱</span>
+                        <span class="quiz-option-text">No, mai usata</span>
+                    </button>
+                    <button class="quiz-option" data-value="basic">
+                        <span class="quiz-option-icon">🤖</span>
+                        <span class="quiz-option-text">Sì, usiamo ChatGPT ogni tanto per fare domande</span>
+                    </button>
+                    <button class="quiz-option" data-value="some">
+                        <span class="quiz-option-icon">⚙️</span>
+                        <span class="quiz-option-text">Abbiamo qualche automazione (es. Zapier/Make)</span>
+                    </button>
+                    <button class="quiz-option" data-value="advanced">
+                        <span class="quiz-option-icon">🚀</span>
+                        <span class="quiz-option-text">Uso intensivo: AI integrata nei nostri processi core</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Analyzing Animation -->
+            <div class="quiz-step" id="quiz-step-analyzing">
+                <div class="analyzing-container">
+                    <div class="analyzing-spinner"></div>
+                    <h3 class="analyzing-title gradient-text">Elaborazione Dati in corso...</h3>
+                    <div class="analyzing-steps">
+                        <div class="analyzing-step" id="a-step-1"><span class="a-check">⏳</span> Mappatura dei processi...</div>
+                        <div class="analyzing-step" id="a-step-2"><span class="a-check">⏳</span> Identificazione colli di bottiglia...</div>
+                        <div class="analyzing-step" id="a-step-3"><span class="a-check">⏳</span> Ricerca tool AI compatibili...</div>
+                        <div class="analyzing-step" id="a-step-4"><span class="a-check">⏳</span> Calcolo ROI e ore recuperabili...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCORE & PAYWALL -->
+            <div class="quiz-step" id="quiz-step-score" style="display:none; padding: 40px 32px;">
+                <div class="score-container">
+                    <div class="score-header">
+                        <div class="score-badge">🎯 Il Tuo AI Readiness Score</div>
+                        <div class="score-circle">
+                            <svg class="score-ring" viewBox="0 0 120 120">
+                                <circle class="score-ring-bg" cx="60" cy="60" r="54"></circle>
+                                <circle class="score-ring-fill" id="score-ring-fill" cx="60" cy="60" r="54"></circle>
+                            </svg>
+                            <div class="score-value" id="score-value">0</div>
+                            <div class="score-label">su 100</div>
+                        </div>
+                        <p class="score-verdict" id="score-verdict"></p>
+                    </div>
+
+                    <div class="score-preview">
+                        <h3>Abbiamo individuato queste automazioni per te:</h3>
+                        <div class="score-preview-items" id="score-preview-items">
+                            <!-- Injected by JS -->
+                        </div>
+                        <div class="score-blur-overlay">
+                            <div class="score-blur-content">
+                                <div class="blur-item"></div>
+                                <div class="blur-item"></div>
+                            </div>
+                            <div class="score-lock">
+                                <div class="lock-icon">🔒</div>
+                                <p>Sblocca il <strong>Piano d'Azione Completo</strong> per vedere la lista esatta dei tool AI da usare, la roadmap step-by-step e le stime di costo.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="score-cta-section">
+                        <div class="score-savings" id="score-savings">
+                            <!-- Filled dynamically -->
+                        </div>
+                        <button class="btn btn-primary btn-xl score-buy-btn" id="score-buy-btn">
+                            <span>Sblocca il Report Completo — €147</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </button>
+                        <div class="score-guarantees">
+                            <span>🛡️ Garanzia soddisfatti o rimborsati</span>
+                            <span>⚡ Report istantaneo post-pagamento</span>
+                            <span>🔒 Pagamento sicuro via Stripe</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="audit.js"></script>
+</body>
+</html>
