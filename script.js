@@ -1,0 +1,454 @@
+/* ============================================
+   AI AUDIT EXPRESS — Quiz Engine + Report Generator
+   ============================================ */
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // =============================================
+    // SCROLL ANIMATIONS
+    // =============================================
+    const observerOptions = { root: null, rootMargin: '0px 0px -60px 0px', threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const parent = entry.target.parentElement;
+                const siblings = parent ? Array.from(parent.querySelectorAll('.animate-on-scroll')) : [];
+                const idx = siblings.indexOf(entry.target);
+                setTimeout(() => entry.target.classList.add('is-visible'), idx >= 0 ? idx * 100 : 0);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+    // =============================================
+    // NAVBAR SCROLL
+    // =============================================
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.pageYOffset > 50);
+    }, { passive: true });
+
+    // =============================================
+    // STICKY CTA
+    // =============================================
+    const stickyCta = document.getElementById('sticky-cta');
+    const heroSection = document.getElementById('hero');
+    if (stickyCta && heroSection) {
+        new IntersectionObserver((entries) => {
+            entries.forEach(e => stickyCta.classList.toggle('visible', !e.isIntersecting));
+        }, { threshold: 0 }).observe(heroSection);
+    }
+
+    // =============================================
+    // FAQ ACCORDION
+    // =============================================
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.closest('.faq-item');
+            const wasActive = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(f => {
+                f.classList.remove('active');
+                f.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+            });
+            if (!wasActive) {
+                item.classList.add('active');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+
+    // =============================================
+    // SMOOTH SCROLL
+    // =============================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '#' || href === '#STRIPE_PAYMENT_LINK') return;
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    // =============================================
+    // PARALLAX ORBS
+    // =============================================
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                const scrollY = window.pageYOffset;
+                document.querySelectorAll('.gradient-orb').forEach((orb, i) => {
+                    orb.style.transform = `translateY(${scrollY * (i + 1) * 0.03}px)`;
+                });
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
+
+    // =============================================
+    // QUIZ ENGINE
+    // =============================================
+    const quizState = {
+        currentStep: 1,
+        totalSteps: 5,
+        answers: {}
+    };
+
+    // Handle single-select option clicks (auto-advance)
+    document.querySelectorAll('.quiz-options:not(.multi) .quiz-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const parent = btn.closest('.quiz-options');
+            const name = parent.dataset.name;
+            const value = btn.dataset.value;
+
+            // Deselect siblings
+            parent.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+
+            // Save answer
+            quizState.answers[name] = value;
+
+            // Auto-advance after brief delay
+            setTimeout(() => advanceQuiz(), 350);
+        });
+    });
+
+    // Handle multi-select (Q3 - pain points)
+    document.querySelectorAll('.quiz-options.multi .quiz-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.classList.toggle('selected');
+            const parent = btn.closest('.quiz-options');
+            const name = parent.dataset.name;
+            const selected = Array.from(parent.querySelectorAll('.quiz-option.selected'))
+                .map(b => b.dataset.value);
+            quizState.answers[name] = selected;
+
+            // Enable/disable next button
+            const nextBtn = document.getElementById('quiz-next-3');
+            if (nextBtn) nextBtn.disabled = selected.length === 0;
+        });
+    });
+
+    // Next button for multi-select step
+    const nextBtn3 = document.getElementById('quiz-next-3');
+    if (nextBtn3) {
+        nextBtn3.addEventListener('click', () => {
+            if (!nextBtn3.disabled) advanceQuiz();
+        });
+    }
+
+    function advanceQuiz() {
+        const currentStepEl = document.querySelector(`.quiz-step[data-step="${quizState.currentStep}"]`);
+        if (currentStepEl) currentStepEl.classList.remove('active');
+
+        quizState.currentStep++;
+
+        if (quizState.currentStep <= quizState.totalSteps) {
+            // Show next question
+            const nextStepEl = document.querySelector(`.quiz-step[data-step="${quizState.currentStep}"]`);
+            if (nextStepEl) {
+                nextStepEl.style.display = 'block';
+                // Force reflow for animation
+                void nextStepEl.offsetWidth;
+                nextStepEl.classList.add('active');
+            }
+            updateProgress();
+        } else {
+            // Quiz complete — show analyzing
+            showAnalyzing();
+        }
+    }
+
+    function updateProgress() {
+        const pct = (quizState.currentStep / quizState.totalSteps) * 100;
+        document.getElementById('quiz-progress-bar').style.width = `${pct}%`;
+        document.getElementById('quiz-progress-text').textContent =
+            `Domanda ${quizState.currentStep} di ${quizState.totalSteps}`;
+    }
+
+    // =============================================
+    // ANALYZING ANIMATION
+    // =============================================
+    function showAnalyzing() {
+        document.getElementById('quiz-progress-bar').style.width = '100%';
+        document.getElementById('quiz-progress-text').textContent = 'Analisi in corso...';
+
+        const analyzingStep = document.getElementById('quiz-step-analyzing');
+        analyzingStep.style.display = 'block';
+        void analyzingStep.offsetWidth;
+        analyzingStep.classList.add('active');
+
+        const steps = ['a-step-1', 'a-step-2', 'a-step-3', 'a-step-4'];
+        steps.forEach((id, i) => {
+            setTimeout(() => {
+                const el = document.getElementById(id);
+                el.classList.add('done');
+                el.querySelector('.a-check').textContent = '✅';
+            }, 800 + i * 900);
+        });
+
+        // Show score after animation
+        setTimeout(() => showScore(), 800 + steps.length * 900 + 600);
+    }
+
+    // =============================================
+    // SCORE CALCULATION & DISPLAY
+    // =============================================
+    function calculateScore(answers) {
+        // Salva le risposte in localStorage per la pagina report
+        localStorage.setItem('aiAuditAnswers', JSON.stringify(answers));
+        
+        let score = 40; // Base score
+
+        // More pain points = more opportunity = higher score
+        const painCount = (answers.painPoints || []).length;
+        score += Math.min(painCount * 7, 28);
+
+        // More hours wasted = higher score
+        const hoursMap = { '5': 5, '10': 10, '20': 15, '30': 20, '40': 25 };
+        score += hoursMap[answers.hoursWasted] || 10;
+
+        // Less AI experience = more room to grow
+        const expMap = { 'none': 12, 'basic': 8, 'some': 4, 'advanced': 2 };
+        score += expMap[answers.aiExperience] || 6;
+
+        // Clamp
+        return Math.min(Math.max(score, 35), 95);
+    }
+
+    function getVerdict(score) {
+        if (score >= 80) return '🔴 La tua azienda ha un <strong>enorme potenziale di automazione</strong>. Stai lasciando sul tavolo migliaia di euro ogni mese.';
+        if (score >= 60) return '🟡 La tua azienda ha <strong>significative opportunità</strong> di automazione AI. Ci sono almeno 3-4 aree ad alto impatto.';
+        return '🟢 Hai alcune <strong>opportunità mirate</strong> per l\'AI. Con le automazioni giuste puoi comunque risparmiare ore ogni settimana.';
+    }
+
+    function getPreviewItems(answers) {
+        const items = [];
+        const painPoints = answers.painPoints || [];
+
+        const painMap = {
+            customer_support: {
+                icon: '💬', title: 'Automazione Customer Care',
+                desc: 'Chatbot AI che gestisce 70-80% delle richieste in autonomia'
+            },
+            data_entry: {
+                icon: '📝', title: 'Eliminazione Data Entry Manuale',
+                desc: 'Estrazione automatica dati da documenti, fatture e email'
+            },
+            reporting: {
+                icon: '📊', title: 'Report Auto-Generati',
+                desc: 'Dashboard e report settimanali creati automaticamente dall\'AI'
+            },
+            content: {
+                icon: '✍️', title: 'Content Creation AI-Powered',
+                desc: 'Generazione di bozze, social post e copy con AI personalizzata'
+            },
+            lead_management: {
+                icon: '🎯', title: 'Lead Scoring & Follow-up Automatico',
+                desc: 'AI che qualifica i lead e invia follow-up personalizzati'
+            },
+            invoicing: {
+                icon: '🧾', title: 'Automazione Contabilità',
+                desc: 'Categorizzazione automatica, riconciliazione e promemoria pagamenti'
+            },
+            scheduling: {
+                icon: '📅', title: 'Smart Scheduling',
+                desc: 'Pianificazione automatica ottimizzata con AI predittiva'
+            },
+            orders: {
+                icon: '📦', title: 'Gestione Ordini Intelligente',
+                desc: 'Tracking automatico, notifiche e ottimizzazione inventario'
+            }
+        };
+
+        // Show first 2 as preview, rest blurred
+        painPoints.forEach((pp, i) => {
+            if (painMap[pp] && i < 2) {
+                items.push(painMap[pp]);
+            }
+        });
+
+        // If less than 2, add generic ones
+        if (items.length < 2) {
+            items.push({
+                icon: '⚡', title: 'Workflow Automation',
+                desc: 'Automazione dei processi più ripetitivi del tuo team'
+            });
+        }
+
+        return items;
+    }
+
+    function getSavingsEstimate(answers) {
+        const hours = parseInt(answers.hoursWasted) || 15;
+        const costPerHour = 25;
+        const savingsPct = 0.6; // AI typically saves 60% of manual time
+        const weeklySavingsHours = Math.round(hours * savingsPct);
+        const monthlySavingsEur = weeklySavingsHours * 4 * costPerHour;
+        const yearlySavingsEur = monthlySavingsEur * 12;
+
+        return {
+            hours: weeklySavingsHours,
+            monthly: monthlySavingsEur.toLocaleString('it-IT'),
+            yearly: yearlySavingsEur.toLocaleString('it-IT')
+        };
+    }
+
+    function showScore() {
+        const analyzingStep = document.getElementById('quiz-step-analyzing');
+        analyzingStep.classList.remove('active');
+        analyzingStep.style.display = 'none';
+
+        // Add SVG gradient definition for score ring
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const scoreSvg = document.querySelector('.score-ring');
+        if (scoreSvg && !document.getElementById('scoreGradient')) {
+            const defs = document.createElementNS(svgNS, 'defs');
+            const gradient = document.createElementNS(svgNS, 'linearGradient');
+            gradient.id = 'scoreGradient';
+            gradient.setAttribute('x1', '0%');
+            gradient.setAttribute('y1', '0%');
+            gradient.setAttribute('x2', '100%');
+            gradient.setAttribute('y2', '0%');
+            const stop1 = document.createElementNS(svgNS, 'stop');
+            stop1.setAttribute('offset', '0%');
+            stop1.setAttribute('style', 'stop-color:#7c5cfc');
+            const stop2 = document.createElementNS(svgNS, 'stop');
+            stop2.setAttribute('offset', '50%');
+            stop2.setAttribute('style', 'stop-color:#c084fc');
+            const stop3 = document.createElementNS(svgNS, 'stop');
+            stop3.setAttribute('offset', '100%');
+            stop3.setAttribute('style', 'stop-color:#f472b6');
+            gradient.appendChild(stop1);
+            gradient.appendChild(stop2);
+            gradient.appendChild(stop3);
+            defs.appendChild(gradient);
+            scoreSvg.insertBefore(defs, scoreSvg.firstChild);
+        }
+
+        const scoreStep = document.getElementById('quiz-step-score');
+        scoreStep.style.display = 'block';
+        void scoreStep.offsetWidth;
+        scoreStep.classList.add('active');
+
+        const score = calculateScore(quizState.answers);
+        const savings = getSavingsEstimate(quizState.answers);
+        const previewItems = getPreviewItems(quizState.answers);
+
+        // Animate score number
+        const scoreValueEl = document.getElementById('score-value');
+        animateCounter(scoreValueEl, 0, score, 1500);
+
+        // Animate ring
+        const ringFill = document.getElementById('score-ring-fill');
+        const circumference = 339.292;
+        const offset = circumference - (score / 100) * circumference;
+        setTimeout(() => {
+            ringFill.style.strokeDashoffset = offset;
+        }, 100);
+
+        // Verdict
+        document.getElementById('score-verdict').innerHTML = getVerdict(score);
+
+        // Preview items
+        const previewContainer = document.getElementById('score-preview-items');
+        previewContainer.innerHTML = previewItems.map(item => `
+            <div class="preview-item">
+                <span class="preview-item-icon">${item.icon}</span>
+                <div class="preview-item-text">
+                    <strong>${item.title}</strong>
+                    <p>${item.desc}</p>
+                </div>
+            </div>
+        `).join('');
+
+        // Savings
+        document.getElementById('score-savings').innerHTML = `
+            💰 Stima risparmio: <strong>${savings.hours} ore/settimana</strong> · <strong>€${savings.monthly}/mese</strong> · <strong>€${savings.yearly}/anno</strong>
+        `;
+
+        // Update progress
+        document.getElementById('quiz-progress-bar').style.width = '100%';
+        document.getElementById('quiz-progress-text').textContent = 'Analisi completata ✓';
+
+        // Scroll to score
+        setTimeout(() => {
+            document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 300);
+    }
+
+    function animateCounter(el, start, end, duration) {
+        const startTime = performance.now();
+        function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(start + (end - start) * eased);
+            el.textContent = current;
+            if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+    }
+
+    // =============================================
+    // STRIPE CHECKOUT
+    // =============================================
+    const buyBtn = document.getElementById('score-buy-btn');
+    if (buyBtn) {
+        buyBtn.addEventListener('click', () => {
+            buyBtn.innerHTML = '<span>Reindirizzamento...</span>';
+            buyBtn.disabled = true;
+            
+            // Inizializza Stripe con la chiave fornita
+            const stripe = Stripe('pk_live_51TVfdJQ5RBA7VVsMKPmMB1nIB2vAADfxXE0OSG2VM4uRvKqTsN4bFXcM5JG31cK4jj0fEgaWWqiisjDLQbiBkLhD00KiTCooLg');
+            
+            // Ottieni l'URL base corretto per success e cancel (funziona sia in locale che su GitHub Pages)
+            const baseUrl = window.location.href.split('?')[0].replace('index.html', '');
+            const successUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'report.html';
+            
+            stripe.redirectToCheckout({
+                lineItems: [{
+                    price: 'prod_UcsD7OJkzKeyy8', // NOTA: Stripe Checkout client-only solitamente richiede un Price ID (es. price_xxxx) non un Product ID (prod_xxxx)
+                    quantity: 1
+                }],
+                mode: 'payment',
+                successUrl: successUrl,
+                cancelUrl: window.location.href,
+            }).then(function (result) {
+                if (result.error) {
+                    alert('Errore Stripe: ' + result.error.message + '\n\nNOTA: Assicurati di aver inserito l\'ID del Prezzo (price_...) e non l\'ID del Prodotto (prod_...).');
+                    buyBtn.innerHTML = '<span>Sblocca il Report Completo — €147</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+                    buyBtn.disabled = false;
+                }
+            });
+        });
+    }
+
+    // =============================================
+    // BUTTON RIPPLE
+    // =============================================
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+        btn.addEventListener('mouseenter', function(e) {
+            const rect = this.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            ripple.style.cssText = `
+                position:absolute; width:0; height:0; border-radius:50%;
+                background:rgba(255,255,255,0.15); transform:translate(-50%,-50%);
+                left:${e.clientX - rect.left}px; top:${e.clientY - rect.top}px;
+                animation:ripple-expand 0.6s ease-out forwards; pointer-events:none;
+            `;
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+
+    const style = document.createElement('style');
+    style.textContent = `@keyframes ripple-expand{to{width:300px;height:300px;opacity:0;}}`;
+    document.head.appendChild(style);
+
+    console.log('⚡ AI Audit Express — Self-service version loaded');
+});

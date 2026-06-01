@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Tuo AI Audit Completo — Express</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .report-header {
+            text-align: center;
+            padding: 80px 24px 40px;
+            border-bottom: 1px solid var(--border-card);
+            background: var(--bg-secondary);
+        }
+        .report-meta {
+            color: var(--accent-2);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+        }
+        .report-section {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--border-card);
+        }
+        .report-section:last-child {
+            border-bottom: none;
+        }
+        .automation-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+        .automation-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .automation-icon {
+            font-size: 2rem;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(124, 92, 252, 0.1);
+            border-radius: var(--radius-md);
+        }
+        .automation-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .automation-body {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .tool-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 16px;
+            border-radius: var(--radius-md);
+        }
+        .tool-card h4 {
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .tool-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .roi-card {
+            background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(16,185,129,0.05));
+            border: 1px solid rgba(34,197,94,0.2);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-top: 40px;
+        }
+        .roi-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #4ade80;
+            margin: 16px 0;
+        }
+        .print-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        @media print {
+            body { background: white; color: black; }
+            .report-header, .report-section { background: white; border-color: #eee; }
+            .automation-card, .tool-card { border-color: #ddd; background: #fafafa; }
+            .gradient-text, .automation-title, .tool-card h4 { color: black !important; -webkit-text-fill-color: black; }
+            .roi-card { border-color: #ccc; background: #f0fdf4; color: black; }
+            .roi-number { color: #166534; }
+            .print-btn, .navbar, .footer { display: none !important; }
+            .container { max-width: 100%; padding: 0 40px; }
+            * { text-shadow: none !important; box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" style="background: var(--bg-secondary);">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">AI Audit Express</span>
+            </a>
+            <div style="font-size: 0.9rem; color: #22c55e; font-weight: 600;">
+                ✓ Pagamento Confermato
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="report-header">
+        <div class="container">
+            <div class="report-meta" id="report-date">Generato il: ...</div>
+            <h1 class="section-title">Piano di Automazione AI per <span class="gradient-text" id="report-sector-title">la tua azienda</span></h1>
+            <p class="section-desc" style="max-width: 700px;">Basato sui dati inseriti, abbiamo elaborato una roadmap per farvi risparmiare tempo e scalare con l'intelligenza artificiale.</p>
+        </div>
+    </header>
+
+    <!-- ROI Summary -->
+    <section class="report-section">
+        <div class="container">
+            <h2 class="section-title" style="font-size: 1.8rem; margin-bottom: 24px; text-align: left;">1. Stima dell'Impatto (ROI)</h2>
+            <div class="roi-card">
+                <h3>Risparmio stimato implementando le automazioni suggerite</h3>
+                <div class="roi-number" id="roi-hours">-- ore</div>
+                <p style="font-size: 1.2rem; margin-bottom: 16px;">liberate ogni singola settimana</p>
+                <div style="display: flex; justify-content: center; gap: 40px; margin-top: 32px; flex-wrap: wrap;">
+                    <div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: #fff;">€<span id="roi-monthly">--</span></div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted);">Risparmio/Mese Valore Tempo</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: #fff;">€<span id="roi-yearly">--</span></div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted);">Risparmio/Anno Stimato</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Automations -->
+    <section class="report-section">
+        <div class="container">
+            <h2 class="section-title" style="font-size: 1.8rem; margin-bottom: 40px; text-align: left;">2. Automazioni Consigliate</h2>
+            <div id="automations-container">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section class="report-section">
+        <div class="container">
+            <h2 class="section-title" style="font-size: 1.8rem; margin-bottom: 40px; text-align: left;">3. Roadmap 90 Giorni</h2>
+            
+            <div class="automation-card">
+                <h3 style="margin-bottom: 16px;">Mese 1: Quick Wins (Bassa complessità, alto impatto)</h3>
+                <ul style="padding-left: 20px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.8;">
+                    <li>Scegli l'automazione n.1 dal report (quella che porta via più ore manuali).</li>
+                    <li>Registra gli account base sui tool suggeriti (es. Zapier o Make + ChatGPT).</li>
+                    <li>Dedica 2 ore a testare il workflow su un piccolo campione di dati (es. 5 email, 5 ordini).</li>
+                    <li>Rilascia internamente al team e monitora per una settimana.</li>
+                </ul>
+
+                <h3 style="margin-bottom: 16px;">Mese 2: Ottimizzazione & Scaling</h3>
+                <ul style="padding-left: 20px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.8;">
+                    <li>Passa alla seconda automazione suggerita.</li>
+                    <li>Inizia a creare una documentazione interna standardizzata per l'uso dell'AI da parte dei dipendenti.</li>
+                    <li>Imposta alert in caso di errori nell'automazione per intervenire tempestivamente.</li>
+                </ul>
+
+                <h3 style="margin-bottom: 16px;">Mese 3: Trasformazione Culturale</h3>
+                <ul style="padding-left: 20px; color: var(--text-secondary); line-height: 1.8;">
+                    <li>Implementa l'automazione più complessa.</li>
+                    <li>Forma il tuo team: chiedi loro di trovare almeno un'altra inefficienza che un tool come ChatGPT potrebbe risolvere.</li>
+                    <li>Rivedi i KPI aziendali includendo le "ore macchina" vs "ore uomo".</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+                Documento riservato e generato automaticamente da AI Audit Express. © 2025.
+            </p>
+        </div>
+    </footer>
+
+    <button class="btn btn-primary btn-lg print-btn" onclick="window.print()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        Scarica PDF
+    </button>
+
+    <script src="report.js"></script>
+</body>
+</html>
