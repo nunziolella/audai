@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guida Pratica: Le Tue Prime 2 Automazioni AI - AUDAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #06060f;
+            --accent: #7c5cfc;
+            --text: #333333;
+            --muted: #666666;
+            --bg: #fafafa;
+            --card-bg: #ffffff;
+            --border: #eaeaea;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .container { max-width: 800px; margin: 40px auto; background: var(--card-bg); padding: 60px 80px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        .header { text-align: center; margin-bottom: 50px; border-bottom: 2px solid var(--accent); padding-bottom: 30px; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); letter-spacing: 0.1em; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .logo img { width: 32px; height: 32px; border-radius: 6px; }
+        h1 { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 16px; line-height: 1.2; }
+        .subtitle { font-size: 1.1rem; color: var(--muted); }
+        .intro { font-size: 1.1rem; margin-bottom: 40px; }
+        .automation-card { border: 1px solid var(--border); border-radius: 10px; padding: 30px; margin-bottom: 40px; position: relative; }
+        .automation-card::before { content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--accent); border-radius: 10px 0 0 10px; }
+        .auto-title { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+        .auto-desc { color: var(--muted); margin-bottom: 20px; }
+        .tools { display: flex; gap: 12px; margin-bottom: 24px; }
+        .tool-badge { background: #f3f0ff; color: var(--accent); padding: 4px 12px; border-radius: 100px; font-size: 0.85rem; font-weight: 600; }
+        h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--primary); }
+        .steps { list-style: none; counter-reset: my-awesome-counter; margin-bottom: 24px; }
+        .steps li { counter-increment: my-awesome-counter; margin-bottom: 16px; position: relative; padding-left: 40px; }
+        .steps li::before { content: counter(my-awesome-counter); position: absolute; left: 0; top: -2px; width: 28px; height: 28px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 600; }
+        .cta-box { background: var(--primary); color: white; padding: 40px; border-radius: 10px; text-align: center; margin-top: 60px; }
+        .cta-box h2 { font-size: 1.6rem; margin-bottom: 16px; }
+        .cta-box p { color: #a0a0b0; margin-bottom: 24px; font-size: 1.05rem; }
+        .btn { display: inline-block; background: #7c5cfc; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.05rem; transition: background 0.2s; }
+        .btn:hover { background: #6b4de3; }
+        .footer { text-align: center; margin-top: 40px; font-size: 0.85rem; color: var(--muted); }
+        
+        @media (max-width: 768px) {
+            .container { padding: 40px 24px; margin: 20px auto; }
+            h1 { font-size: 1.8rem; }
+        }
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; margin: 0; padding: 0; max-width: 100%; }
+            .cta-box { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <span>AUDAI</span>
+            </div>
+            <h1>Il Tuo Piano d'Azione AI: Le Prime 2 Automazioni</h1>
+            <p class="subtitle">Framework pratico per recuperare immediatamente le tue prime 10 ore a settimana.</p>
+        </div>
+
+        <div class="intro">
+            <p>Congratulazioni per aver completato l'Audit. L'Intelligenza Artificiale non è magia, è semplicemente l'esecuzione rapidissima di processi ben definiti. In questa guida pratica trovi i due framework esatti che implementiamo nelle aziende dei nostri clienti per ottenere i primi risultati in meno di 48 ore.</p>
+        </div>
+
+        <!-- Automazione 1 -->
+        <div class="automation-card">
+            <div class="auto-title">
+                <span>💬</span> Automazione Customer Care (Livello 1)
+            </div>
+            <p class="auto-desc">Come azzerare il tempo perso a rispondere alle stesse 10 domande dei clienti.</p>
+            
+            <div class="tools">
+                <span class="tool-badge">Tool consigliato: Chatbase o Dante AI</span>
+                <span class="tool-badge">Costo: ~$20/mese</span>
+                <span class="tool-badge">Tempo Setup: 45 min</span>
+            </div>
+
+            <h3>Come implementarlo oggi:</h3>
+            <ul class="steps">
+                <li><strong>Crea la tua "Base di Conoscenza"</strong>: Apri un documento Word o Google Doc. Incolla le risposte alle 20 domande più frequenti (resoconto ordini, orari, rimborsi, FAQ tecniche). Aggiungi il link al tuo sito web o eventuali file PDF con cataloghi.</li>
+                <li><strong>Addestra l'AI in 2 clic</strong>: Crea un account su Chatbase.co. Clicca su "Create Chatbot" e carica il documento Word appena creato o inserisci il link del tuo sito web. L'AI leggerà tutto in 30 secondi.</li>
+                <li><strong>Imposta le istruzioni base</strong>: Nel menu "Settings -> System Prompt", scrivi: <em>"Sei l'assistente ufficiale dell'azienda. Rispondi in modo cortese ed estremamente sintetico. Usa solo le informazioni fornite. Se non sai la risposta, chiedi di scrivere a info@tuamail.com"</em>.</li>
+                <li><strong>Integra ovunque</strong>: Copia la riga di codice generata e incollala sul tuo sito web, oppure collegalo direttamente a WhatsApp tramite le integrazioni native della piattaforma.</li>
+            </ul>
+        </div>
+
+        <!-- Automazione 2 -->
+        <div class="automation-card">
+            <div class="auto-title">
+                <span>⚡</span> Workflow Automation (Data Entry Eliminato)
+            </div>
+            <p class="auto-desc">Come smettere di copiare e incollare dati tra email, fogli Excel e CRM.</p>
+            
+            <div class="tools">
+                <span class="tool-badge">Tool consigliato: Make.com + ChatGPT</span>
+                <span class="tool-badge">Costo: ~$10/mese</span>
+                <span class="tool-badge">Tempo Setup: 60 min</span>
+            </div>
+
+            <h3>Come implementarlo oggi:</h3>
+            <ul class="steps">
+                <li><strong>Mappa il flusso (Trigger)</strong>: Iscriviti a Make.com. Crea un nuovo "Scenario". Come primo step (Trigger) seleziona Gmail o Outlook e scegli "Watch Emails" (filtra solo per le email che contengono ad esempio la parola "Fattura" o "Nuovo Ordine").</li>
+                <li><strong>Lascia leggere l'AI (Action)</strong>: Come secondo modulo, aggiungi OpenAI (ChatGPT). Scegli "Create a Completion". Nel prompt scrivi: <em>"Estrai da questa email il Nome Cliente, l'Importo e la Scadenza. Restituisci i dati in formato pulito separati da virgola. Testo email: [inserisci la variabile Text Content dall'email precedente]"</em>.</li>
+                <li><strong>Salva i dati (Destination)</strong>: Aggiungi un terzo modulo (es. Google Sheets o il tuo CRM). Mappa i campi restituiti da ChatGPT nelle rispettive colonne.</li>
+                <li><strong>Attiva e dimentica</strong>: Clicca su "Run once" per testare inviandoti un'email finta. Se i dati compaiono magicamente nel tuo file Excel, attiva lo scenario su "ON". Hai appena eliminato un lavoro noioso per sempre.</li>
+            </ul>
+        </div>
+
+        <!-- Upsell Section -->
+        <div class="cta-box">
+            <h2>Queste sono solo le prime due.</h2>
+            <p>Se queste due automazioni possono salvarti 10 ore a settimana... immagina cosa può fare il Piano d'Azione Completo tagliato su misura per il tuo Score esatto.</p>
+            <p style="font-size: 0.95rem; margin-bottom: 24px;">Il Report Premium sblocca <strong>tutte</strong> le automazioni individuate per la tua azienda, le stime esatte di ROI, la roadmap di adozione mensile e l'accesso diretto alla nostra libreria di System Prompts pronti all'uso.</p>
+            <a href="https://nunziolella.github.io/audai/audit.html" class="btn">Sblocca il Report Completo — €147</a>
+        </div>
+
+        <div class="footer">
+            © 2026 AUDAI. Tutti i diritti riservati.<br>
+            Questo documento è personale e confidenziale.
+        </div>
+    </div>
+
+</body>
+</html>

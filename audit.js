@@ -102,8 +102,57 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 800 + i * 900);
         });
 
-        // Show score after animation
-        setTimeout(() => showScore(), 800 + steps.length * 900 + 600);
+        // Show lead capture after animation
+        setTimeout(() => showLeadCapture(), 800 + steps.length * 900 + 600);
+    }
+
+    // =============================================
+    // LEAD CAPTURE
+    // =============================================
+    function showLeadCapture() {
+        const analyzingStep = document.getElementById('quiz-step-analyzing');
+        analyzingStep.classList.remove('active');
+
+        const leadStep = document.getElementById('quiz-step-lead');
+        void leadStep.offsetWidth;
+        leadStep.classList.add('active');
+
+        document.getElementById('quiz-progress-text').textContent = 'Ultimo Step!';
+    }
+
+    const leadForm = document.getElementById('lead-form');
+    if (leadForm) {
+        leadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('lead-name').value;
+            const email = document.getElementById('lead-email').value;
+            
+            const btn = document.getElementById('lead-submit-btn');
+            btn.innerHTML = '<span>Invio in corso...</span>';
+            btn.disabled = true;
+
+            // Inserisci qui l'URL del tuo Webhook Make.com
+            const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/INSERISCI_QUI_IL_TUO_WEBHOOK';
+            
+            const payload = {
+                name: name,
+                email: email,
+                answers: quizState.answers,
+                timestamp: new Date().toISOString()
+            };
+
+            // Invia i dati a Make.com (non blocca se fallisce)
+            fetch(MAKE_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(e => console.log('Webhook Make.com non ancora configurato o errore di rete.', e))
+              .finally(() => {
+                  const leadStep = document.getElementById('quiz-step-lead');
+                  leadStep.classList.remove('active');
+                  showScore();
+              });
+        });
     }
 
     // =============================================
@@ -172,8 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showScore() {
-        const analyzingStep = document.getElementById('quiz-step-analyzing');
-        analyzingStep.classList.remove('active');
 
         const svgNS = 'http://www.w3.org/2000/svg';
         const scoreSvg = document.querySelector('.score-ring');

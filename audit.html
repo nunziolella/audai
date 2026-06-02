@@ -237,8 +237,27 @@
                         <div class="analyzing-step" id="a-step-1"><span class="a-check">⏳</span> Mappatura dei processi...</div>
                         <div class="analyzing-step" id="a-step-2"><span class="a-check">⏳</span> Identificazione colli di bottiglia...</div>
                         <div class="analyzing-step" id="a-step-3"><span class="a-check">⏳</span> Ricerca tool AI compatibili...</div>
-                        <div class="analyzing-step" id="a-step-4"><span class="a-check">⏳</span> Calcolo ROI e ore recuperabili...</div>
+                        <div class="analyzing-step" id="a-step-4"><span class="a-check">⏳</span> Preparazione Guida Pratica...</div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Lead Capture (Gate) -->
+            <div class="quiz-step" id="quiz-step-lead">
+                <div class="lead-container" style="text-align: center; padding: 20px 0;">
+                    <div style="font-size: 3.5rem; margin-bottom: 16px;">🎯</div>
+                    <h3 class="quiz-question" style="font-size: 2rem;">L'Analisi è Pronta!</h3>
+                    <p class="quiz-hint" style="margin-bottom: 36px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.6;">Inserisci la tua email per sbloccare istantaneamente il tuo <strong>AI Readiness Score</strong> e ricevere subito la <strong style="color:var(--accent-2);">Guida Pratica Gratuita</strong> con le prime 2 automazioni già pronte da implementare.</p>
+                    
+                    <form id="lead-form" style="display: flex; flex-direction: column; gap: 16px; max-width: 400px; margin: 0 auto;">
+                        <input type="text" id="lead-name" placeholder="Il tuo Nome" required style="width: 100%; padding: 16px 20px; border-radius: var(--radius-md); border: 1px solid var(--border-card); background: rgba(255,255,255,0.05); color: white; font-family: var(--font); font-size: 1rem; outline: none; transition: border-color 0.3s;">
+                        <input type="email" id="lead-email" placeholder="La tua Email aziendale" required style="width: 100%; padding: 16px 20px; border-radius: var(--radius-md); border: 1px solid var(--border-card); background: rgba(255,255,255,0.05); color: white; font-family: var(--font); font-size: 1rem; outline: none; transition: border-color 0.3s;">
+                        
+                        <button type="submit" class="btn btn-primary btn-xl btn-glow" id="lead-submit-btn" style="width: 100%; justify-content: center; margin-top: 8px;">
+                            <span>Sblocca i Risultati →</span>
+                        </button>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Ti invieremo solo la guida e il report. Niente spam.</p>
+                    </form>
                 </div>
             </div>
 
@@ -259,7 +278,11 @@
                     </div>
 
                     <div class="score-preview">
-                        <h3>Abbiamo individuato queste automazioni per te:</h3>
+                        <h3>Le tue prime 2 automazioni:</h3>
+                        <div style="padding:10px 16px; background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.2); color:#4ade80; border-radius:var(--radius-sm); font-size:0.85rem; font-weight:600; margin:0 auto 24px; text-align:center; max-width: 400px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            Guida pratica inviata alla tua email
+                        </div>
                         <div class="score-preview-items" id="score-preview-items">
                             <!-- Injected by JS -->
                         </div>
