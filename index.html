@@ -11,36 +11,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    
-    <!-- Spline 3D Viewer -->
-    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.94/build/spline-viewer.js"></script>
 
     <style>
-        /* Landing Page Specific Styles */
+        /* Landing Page 3D Canvas Background */
         body {
             margin: 0;
             overflow-x: hidden;
-            background-color: #050505;
+            background-color: #030305;
         }
 
-        .spline-container {
+        #canvas-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
             z-index: 0;
-            pointer-events: auto; /* Allow interaction with 3D object */
+            pointer-events: none; /* Let clicks pass to the UI */
         }
         
-        .spline-container::after {
+        #canvas-container::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 30vh;
-            background: linear-gradient(to top, #050505 0%, transparent 100%);
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, transparent 20%, #030305 100%);
             pointer-events: none;
         }
 
@@ -50,14 +44,13 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            pointer-events: none; /* Let clicks pass through to Spline where there is no UI */
         }
 
         .navbar {
-            pointer-events: auto;
-            background: transparent !important;
+            background: rgba(3, 3, 5, 0.7) !important;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
         .nav-logo {
@@ -75,81 +68,78 @@
             border-radius: 8px;
         }
 
-        .hero-3d {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            padding-top: 15vh;
+        .hero {
+            padding: 18vh 20px 10vh;
+            text-align: center;
         }
 
         .hero-content {
-            max-width: 800px;
-            pointer-events: auto; /* Re-enable clicks for text and buttons */
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         .hero-title {
-            font-size: 4.5rem;
-            line-height: 1.1;
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1.05;
             margin-bottom: 24px;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            letter-spacing: -0.02em;
         }
 
         .hero-desc {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: rgba(255,255,255,0.7);
-            margin-bottom: 40px;
-            text-shadow: 0 5px 20px rgba(0,0,0,0.8);
-            max-width: 600px;
+            margin: 0 auto 40px;
+            max-width: 650px;
+            font-weight: 400;
         }
 
         .btn-glow {
             box-shadow: 0 0 30px rgba(124, 92, 252, 0.4);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
         }
 
         .btn-glow:hover {
-            box-shadow: 0 0 50px rgba(124, 92, 252, 0.6);
-            transform: translateY(-2px);
+            box-shadow: 0 0 60px rgba(124, 92, 252, 0.7);
+            transform: scale(1.02) translateY(-2px);
         }
 
-        /* Overlay text indicating interaction */
-        .interaction-hint {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255,255,255,0.4);
-            font-size: 0.85rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            pointer-events: none;
-            animation: pulse-opacity 2s infinite;
+        /* Restored Sections Styles */
+        .glass-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
         }
 
-        @keyframes pulse-opacity {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.8; }
+        .section {
+            position: relative;
+            z-index: 10;
+            padding: 100px 0;
+            background: linear-gradient(to bottom, transparent, rgba(3,3,5,0.95) 20%, #030305);
         }
-        
+
+        .section-pricing, .section-faq, .section-final-cta, .footer {
+            background: #030305;
+        }
+
         @media (max-width: 768px) {
-            .hero-title { font-size: 3rem; }
+            .hero-title { font-size: 3.2rem; }
             .hero-desc { font-size: 1.1rem; }
-            .hero-3d { padding-top: 25vh; }
+            .hero { padding-top: 15vh; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 3D Background -->
-    <div class="spline-container">
-        <!-- Using a high-quality abstract dark geometric spline scene -->
-        <spline-viewer loading-anim-type="spinner-small-light" url="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"></spline-viewer>
+    <!-- Premium Neural Network Canvas Background -->
+    <div id="canvas-container">
+        <canvas id="neural-net"></canvas>
     </div>
 
-    <!-- UI Overlay -->
+    <!-- Main Content Flow -->
     <div class="main-content">
         <!-- Navbar -->
         <nav class="navbar">
@@ -162,50 +152,290 @@
         </nav>
 
         <!-- Hero -->
-        <main class="hero hero-3d">
+        <main class="hero">
             <div class="container hero-content">
-                <div class="hero-micro">INTELLIGENZA ARTIFICIALE PER PMI</div>
+                <div class="hero-micro" style="color: var(--accent-2); font-weight: 600; letter-spacing: 0.1em; margin-bottom: 20px;">AI AUDIT PER PMI</div>
                 <h1 class="hero-title">
                     Il Futuro della<br>
                     <span class="gradient-text">Tua Azienda.</span>
                 </h1>
                 <p class="hero-desc">
-                    Scopri l'esatto potenziale di automazione dei tuoi processi. Riduci i costi, elimina gli errori e scala senza assumere. 
+                    Mappa i tuoi processi. Scopri il tuo potenziale di automazione. Elimina gli errori e scala senza assumere.
                 </p>
-                <div class="hero-ctas">
-                    <a href="audit.html" class="btn btn-primary btn-xl btn-glow">
-                        <span>Avvia l'Audit Interattivo</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <div class="hero-ctas" style="display:flex; justify-content:center; gap:20px; align-items:center;">
+                    <a href="audit.html" class="btn btn-primary btn-xl btn-glow" style="padding: 18px 40px; font-size: 1.1rem;">
+                        <span>Inizia l'Audit Gratuito</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </a>
                 </div>
-                <div class="hero-trust" style="margin-top: 24px; color: rgba(255,255,255,0.5);">
-                    <div class="avatars" style="display: flex; gap: -10px;">
-                        <!-- Simple avatars representation -->
-                    </div>
-                    <span>Dura meno di 2 minuti. Nessuna registrazione.</span>
-                </div>
+                <p style="margin-top: 24px; color: rgba(255,255,255,0.4); font-size: 0.9rem;">Dura 2 minuti. Nessuna carta di credito richiesta.</p>
             </div>
         </main>
-        
-        <div class="interaction-hint">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            Trascina per esplorare
-        </div>
+
+        <!-- The Problem -->
+        <section class="section" id="problema">
+            <div class="container">
+                <div class="section-header animate-on-scroll">
+                    <span class="section-tag">La Realtà</span>
+                    <h2 class="section-title">Stai perdendo soldi ogni volta che il tuo team fa <span class="gradient-text">copia-incolla</span></h2>
+                </div>
+                <div class="problem-grid animate-on-scroll">
+                    <div class="problem-card glass-card">
+                        <div class="problem-icon">⏳</div>
+                        <h3>Tempo Sprecato</h3>
+                        <p>Il 40% del tempo dei tuoi dipendenti viene bruciato in attività ripetitive, data entry e generazione report. Ore pagate per fare il lavoro di una macchina.</p>
+                    </div>
+                    <div class="problem-card glass-card">
+                        <div class="problem-icon">❌</div>
+                        <h3>Errori Umani</h3>
+                        <p>Dimenticanze, email perse, dati trascritti male. Gli errori umani costano migliaia di euro e minano la fiducia dei tuoi clienti.</p>
+                    </div>
+                    <div class="problem-card glass-card">
+                        <div class="problem-icon">💸</div>
+                        <h3>Scale Bloccato</h3>
+                        <p>Non puoi crescere se l'unico modo per gestire più clienti è assumere più persone. I tuoi margini si assottigliano e lo stress aumenta.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- What's in the Report -->
+        <section class="section section-included" id="cosa-include">
+            <div class="container">
+                <div class="section-header animate-on-scroll">
+                    <span class="section-tag">La Soluzione</span>
+                    <h2 class="section-title">Un report esecutivo che vale <span class="gradient-text">10x il prezzo</span></h2>
+                </div>
+                <div class="included-wrapper animate-on-scroll">
+                    <div class="included-card glass-card" style="padding: 40px;">
+                        <ul class="included-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 32px;">
+                            <li style="display: flex; gap: 16px;"><span style="color:var(--accent-2); font-size: 1.5rem;">✓</span><div><strong style="font-size: 1.1rem; color: white;">AI Readiness Score</strong><p style="color: var(--text-muted); margin-top: 8px;">Quanto è pronta la tua azienda per l'AI, con benchmark di settore</p></div></li>
+                            <li style="display: flex; gap: 16px;"><span style="color:var(--accent-2); font-size: 1.5rem;">✓</span><div><strong style="font-size: 1.1rem; color: white;">Automazioni specifiche</strong><p style="color: var(--text-muted); margin-top: 8px;">Non generiche — basate rigorosamente sui TUOI processi</p></div></li>
+                            <li style="display: flex; gap: 16px;"><span style="color:var(--accent-2); font-size: 1.5rem;">✓</span><div><strong style="font-size: 1.1rem; color: white;">Tool consigliati e Costi</strong><p style="color: var(--text-muted); margin-top: 8px;">I migliori strumenti per ogni automazione, con analisi dei prezzi</p></div></li>
+                            <li style="display: flex; gap: 16px;"><span style="color:var(--accent-2); font-size: 1.5rem;">✓</span><div><strong style="font-size: 1.1rem; color: white;">Stima ROI dettagliata</strong><p style="color: var(--text-muted); margin-top: 8px;">Ore risparmiate, costo tagliato, payback period garantito</p></div></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Reminder -->
+        <section class="section section-pricing" id="prezzo">
+            <div class="container">
+                <div class="pricing-card glass-card animate-on-scroll" style="max-width: 600px; margin: 0 auto; text-align: center; padding: 48px;">
+                    <div class="pricing-badge" style="display:inline-block; padding:8px 16px; background:rgba(124,92,252,0.2); color:var(--accent-2); border-radius:100px; font-weight:600; margin-bottom: 24px;">🔥 Offerta Lancio</div>
+                    <div class="pricing-header">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 16px;">AI Audit Express — Report Completo</h3>
+                        <div class="pricing-amount" style="font-size: 3rem; font-weight: 900; margin-bottom: 8px;">
+                            <span class="pricing-old" style="text-decoration: line-through; color: var(--text-muted); font-size: 1.5rem;">€297</span>
+                            <span class="pricing-current gradient-text">€147</span>
+                        </div>
+                        <p class="pricing-note" style="color: var(--text-muted); margin-bottom: 32px;">Pagamento unico · Accesso istantaneo · Nessuna Call</p>
+                    </div>
+                    <a href="audit.html" class="btn btn-primary btn-xl btn-glow" style="width: 100%; justify-content: center;">
+                        <span>Inizia Ora →</span>
+                    </a>
+                    <p class="pricing-guarantee" style="margin-top: 24px; color: var(--text-muted); font-size: 0.9rem;">🛡️ Garanzia 100%: Se il report non ti dà almeno 3 idee concrete e profittevoli, ti rimborsiamo tutto.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="section section-faq" id="faq">
+            <div class="container">
+                <div class="section-header animate-on-scroll">
+                    <span class="section-tag">FAQ</span>
+                    <h2 class="section-title">Domande frequenti</h2>
+                </div>
+                <div class="faq-list animate-on-scroll">
+                    <div class="faq-item glass-card" id="faq-1">
+                        <button class="faq-question" aria-expanded="false"><span>Come funziona esattamente?</span><svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+                        <div class="faq-answer"><p>Rispondi a 5 domande sulla tua azienda (2 minuti). Il nostro sistema analizza il tuo profilo e genera un report personalizzato con automazioni AI. Ricevi tutto istantaneamente dopo il pagamento.</p></div>
+                    </div>
+                    <div class="faq-item glass-card" id="faq-2">
+                        <button class="faq-question" aria-expanded="false"><span>Devo avere competenze tecniche?</span><svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+                        <div class="faq-answer"><p>Assolutamente no. Le automazioni proposte usano strumenti no-code. Il report include guide pratiche step-by-step comprensibili da chiunque.</p></div>
+                    </div>
+                    <div class="faq-item glass-card" id="faq-3">
+                        <button class="faq-question" aria-expanded="false"><span>Il report è davvero personalizzato?</span><svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+                        <div class="faq-answer"><p>Sì. Viene generato dinamicamente in base alle tue risposte (settore, dimensione team, processi manuali, ecc.).</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content" style="display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 40px 0;">
+                    <div class="footer-brand" style="display: flex; align-items: center; gap: 12px; font-weight: 800; color: white;">
+                        <img src="logo.png" alt="AUDAI" style="width: 24px; height: 24px; border-radius: 4px;">
+                        <span>AUDAI</span>
+                    </div>
+                    <p class="footer-copy" style="color: var(--text-muted); font-size: 0.9rem;">© 2026 AUDAI · Intelligent Process Audit</p>
+                </div>
+            </div>
+        </footer>
     </div>
 
+    <!-- PRO 3D Canvas Neural Network Script -->
     <script>
-        // Simple JS for landing page
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('AUDAI Landing Page loaded.');
-            
-            // Remove the spline watermark if possible (hacky, might not work due to shadow DOM)
-            setTimeout(() => {
-                const viewer = document.querySelector('spline-viewer');
-                if(viewer && viewer.shadowRoot) {
-                    const logo = viewer.shadowRoot.querySelector('#logo');
-                    if(logo) logo.style.display = 'none';
+        const canvas = document.getElementById('neural-net');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        
+        // Configuration
+        const config = {
+            particleCount: window.innerWidth < 768 ? 60 : 120,
+            baseRadius: 1.5,
+            connectionDistance: 130,
+            colorBase: 'rgba(124, 92, 252, ', // Purple
+            colorAlt: 'rgba(56, 189, 248, ', // Blue
+            speed: 0.4
+        };
+
+        let mouse = { x: null, y: null, radius: 180 };
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', () => {
+            resize();
+            initParticles();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * config.speed;
+                this.vy = (Math.random() - 0.5) * config.speed;
+                this.radius = Math.random() * 2 + config.baseRadius;
+                this.color = Math.random() > 0.5 ? config.colorBase : config.colorAlt;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > height) this.vy = -this.vy;
+
+                // Mouse interaction
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const maxDistance = mouse.radius;
+                        const force = (maxDistance - distance) / maxDistance;
+                        const directionX = forceDirectionX * force * 1.5;
+                        const directionY = forceDirectionY * force * 1.5;
+                        this.x -= directionX;
+                        this.y -= directionY;
+                    }
                 }
-            }, 2000);
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color + '0.8)';
+                ctx.fill();
+                
+                // Glow
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color + '1)';
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < config.particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function connectParticles() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < config.connectionDistance) {
+                        let opacity = 1 - (distance / config.connectionDistance);
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(124, 92, 252, ${opacity * 0.4})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                        ctx.shadowBlur = 0; // Reset shadow for lines
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, width, height);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            connectParticles();
+        }
+
+        // Init
+        resize();
+        initParticles();
+        animate();
+
+        // Scroll Animations
+        const observerOptions = { root: null, rootMargin: '0px 0px -50px 0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = btn.closest('.faq-item');
+                const wasActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(f => {
+                    f.classList.remove('active');
+                    f.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                });
+                if (!wasActive) {
+                    item.classList.add('active');
+                    btn.setAttribute('aria-expanded', 'true');
+                }
+            });
         });
     </script>
 </body>

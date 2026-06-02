@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show next question
             const nextStepEl = document.querySelector(`.quiz-step[data-step="${quizState.currentStep}"]`);
             if (nextStepEl) {
-                nextStepEl.style.display = 'block';
                 void nextStepEl.offsetWidth;
                 nextStepEl.classList.add('active');
             }
@@ -91,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('quiz-progress-text').textContent = 'Analisi in corso...';
 
         const analyzingStep = document.getElementById('quiz-step-analyzing');
-        analyzingStep.style.display = 'block';
         void analyzingStep.offsetWidth;
         analyzingStep.classList.add('active');
 
@@ -176,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function showScore() {
         const analyzingStep = document.getElementById('quiz-step-analyzing');
         analyzingStep.classList.remove('active');
-        analyzingStep.style.display = 'none';
 
         const svgNS = 'http://www.w3.org/2000/svg';
         const scoreSvg = document.querySelector('.score-ring');
@@ -205,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const scoreStep = document.getElementById('quiz-step-score');
-        scoreStep.style.display = 'block';
         void scoreStep.offsetWidth;
         scoreStep.classList.add('active');
 
