@@ -142,14 +142,18 @@
     <!-- Main Content Flow -->
     <div class="main-content">
         <!-- Navbar -->
-        <nav class="navbar">
-            <div class="container nav-container">
-                <a href="index.html" class="nav-logo">
-                    <img src="logo.png" alt="AUDAI Logo">
-                    <span>AUDAI</span>
-                </a>
+        <nav class="navbar" id="navbar">
+        <div class="nav-container" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px;">
+            <div class="nav-logo">
+                <img src="logo.png" alt="AUDAI Logo" style="width: 28px; height: 28px; border-radius: 6px;">
+                <span>AUDAI</span>
             </div>
-        </nav>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <a href="blog/index.html" style="font-size: 0.9rem; color: #fff; font-weight: 500; text-decoration: none;">Blog</a>
+                <a href="audit.html" class="nav-cta" style="padding: 10px 20px; background: #7c5cfc; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Fai l'Audit Gratuito</a>
+            </div>
+        </div>
+    </nav>
 
         <!-- Hero -->
         <main class="hero">
@@ -272,10 +276,24 @@
                         <img src="logo.png" alt="AUDAI" style="width: 24px; height: 24px; border-radius: 4px;">
                         <span>AUDAI</span>
                     </div>
+                    <div style="display: flex; gap: 24px; margin-bottom: 8px;">
+                        <a href="blog/index.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem;">Risorse & Blog</a>
+                        <a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem;">Privacy Policy</a>
+                        <a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem;">Termini</a>
+                    </div>
                     <p class="footer-copy" style="color: var(--text-muted); font-size: 0.9rem;">© 2026 AUDAI · Intelligent Process Audit</p>
                 </div>
             </div>
         </footer>
+    </div>
+
+    <!-- Social Proof Toast -->
+    <div id="social-proof-toast" style="position: fixed; bottom: -100px; left: 24px; background: rgba(10,10,18,0.9); backdrop-filter: blur(10px); border: 1px solid rgba(124,92,252,0.3); border-radius: 12px; padding: 14px 20px; display: flex; align-items: center; gap: 14px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); z-index: 1000; transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none;">
+        <div style="width: 10px; height: 10px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 10px #22c55e; flex-shrink: 0;"></div>
+        <div style="font-size: 0.85rem; color: #fff; line-height: 1.4;">
+            <strong id="sp-name" style="color: var(--text-primary);">Marco da Milano</strong> ha appena sbloccato il suo AI Audit
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 2px;" id="sp-time">Adesso</div>
+        </div>
     </div>
 
     <!-- PRO 3D Canvas Neural Network Script -->
@@ -437,6 +455,25 @@
                 }
             });
         });
+
+        // Social Proof Toast Logic
+        const names = ['Marco da Milano', 'Luca da Roma', 'Giulia da Torino', 'Alessandro da Bologna', 'Chiara da Firenze', 'Matteo da Napoli'];
+        const times = ['Adesso', '1 minuto fa', '3 minuti fa'];
+        
+        function showToast() {
+            const toast = document.getElementById('social-proof-toast');
+            document.getElementById('sp-name').textContent = names[Math.floor(Math.random() * names.length)];
+            document.getElementById('sp-time').textContent = times[Math.floor(Math.random() * times.length)];
+            
+            toast.style.bottom = '24px';
+            setTimeout(() => { toast.style.bottom = '-100px'; }, 4000);
+            
+            // Re-trigger random
+            setTimeout(showToast, 12000 + Math.random() * 15000);
+        }
+        
+        // Start after 5s
+        setTimeout(showToast, 5000);
     </script>
 </body>
 </html>

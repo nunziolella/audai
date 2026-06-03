@@ -140,6 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 answers: quizState.answers,
                 timestamp: new Date().toISOString()
             };
+            
+            // Salvataggio locale per frizionless delivery
+            localStorage.setItem('audai_lead_name', name);
+            localStorage.setItem('audai_lead_email', email);
 
             // Invia i dati a Make.com (non blocca se fallisce)
             fetch(MAKE_WEBHOOK_URL, {
@@ -268,8 +272,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('score-verdict').innerHTML = getVerdict(score);
 
+        const leadName = localStorage.getItem('audai_lead_name') || 'Eccellente';
+        const firstName = leadName.split(' ')[0];
+
         const previewContainer = document.getElementById('score-preview-items');
-        previewContainer.innerHTML = previewItems.map(item => `
+        previewContainer.innerHTML = `
+            <div style="text-align: center; margin-bottom: 20px;">
+                <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 8px;">Ottimo lavoro, ${firstName}! 🎉</p>
+                <a href="guida-pratica.html" target="_blank" class="btn" style="background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); padding: 8px 16px; font-size: 0.9rem; text-decoration: none; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Scarica la tua Guida Pratica (PDF)
+                </a>
+            </div>
+            ${previewItems.map(item => `
             <div class="preview-item">
                 <span class="preview-item-icon">${item.icon}</span>
                 <div class="preview-item-text">
@@ -277,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>${item.desc}</p>
                 </div>
             </div>
-        `).join('');
+        `).join('')}`;
 
         document.getElementById('score-savings').innerHTML = `
             💰 Stima risparmio: <strong>${savings.hours} ore/settimana</strong> · <strong>€${savings.monthly}/mese</strong> · <strong>€${savings.yearly}/anno</strong>
